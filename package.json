@@ -1,0 +1,20 @@
+{
+  "name": "honey-lambda-logger",
+  "version": "0.0.1",
+  "description": "A simple wrapper for NodeJS Lambda calls that logs every invocation in lambda with useful metadata",
+  "main": "src/index.js",
+  "repository": "git@github.com:bitgenics/honey-lambda-logger.git",
+  "author": "Erwin van der Koogh <erwin@bitgenics.io>",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "encodeurl": "^1.0.2",
+    "r2": "^2.0.1"
+  },
+  "devDependencies": {
+    "jest": "^24.1.0"
+  }
+}

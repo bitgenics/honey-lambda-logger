@@ -1,0 +1,26 @@
+{
+  "Records": [
+    {
+      "eventID": "2e9f9c4b9ad4f493fdcb79765cb29ffa",
+      "eventName": "INSERT",
+      "eventVersion": "1.1",
+      "eventSource": "aws:dynamodb",
+      "awsRegion": "us-east-1",
+      "dynamodb": {
+        "ApproximateCreationDateTime": 1550232098,
+        "Keys": {
+          "sort_key": { "S": "Sorting" },
+          "partition_key": { "S": "Partition" }
+        },
+        "NewImage": {
+          "sort_key": { "S": "Sorting" },
+          "partition_key": { "S": "Partition" }
+        },
+        "SequenceNumber": "537507800000000003184831514",
+        "SizeBytes": 399,
+        "StreamViewType": "NEW_AND_OLD_IMAGES"
+      },
+      "eventSourceARN": "arn:aws:dynamodb:us-east-1:123456789012:table/Example/stream/2018-10-27T13:00:02.180"
+    }
+  ]
+}
