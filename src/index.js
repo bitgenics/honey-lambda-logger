@@ -2,6 +2,8 @@ const honeycomb = require('./honeycomb')
 const parseEventMetadata = require('./parseEvent')
 const lambda_promisify = require('./lambda_promisify')
 
+const ARN_PARSER = /arn:aws:(\w*):([^:]*):(\d*):/
+
 const sendEvent = async (trace, context, start_time) => {
   const duration = process.hrtime(start_time)
   trace.durationInMs = (duration[0] * 1000 + duration[1] / 1e6).toFixed(1)
@@ -34,6 +36,9 @@ const lambda_log_wrapper = (
       const timeout_duration = context.getRemainingTimeInMillis()
       const timeoutInSec = Math.ceil(timeout_duration / 1000)
       const event_meta = parseMetadata ? parseEventMetadata(event) : null
+      const match = context.invokedFunctionArn.match(ARN_PARSER)
+      context.region = match.length > 3 ? match[2] : null
+      context.accountId = match.length > 4 ? match[3] : null
       trace = { context, meta, event_meta, timeoutInSec }
       timeout_id = setTimeout(async () => {
         trace.likely_timeout = true
@@ -47,7 +52,6 @@ const lambda_log_wrapper = (
       if (transformResult) {
         trace.result = transformResult(result)
       }
-      console.log({ result })
     } catch (err) {
       console.log('ERR!')
       console.log(err)
