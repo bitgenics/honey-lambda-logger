@@ -1,0 +1,27 @@
+{
+  "Records": [
+    {
+      "EventSource": "aws:sns",
+      "EventVersion": "1.0",
+      "EventSubscriptionArn": "arn:aws:sns:us-east-1:123456789012:SomeTopicName:0ed6d91c-b94c-476a-a3d5-0696ce6c0793",
+      "Sns": {
+        "Type": "Notification",
+        "MessageId": "8227900a-9b93-55b4-9b60-c3da39bed461",
+        "TopicArn": "arn:aws:sns:us-east-1:123456789012:SomeTopicName",
+        "Subject": "something",
+        "Message": "nonsense",
+        "Timestamp": "2018-07-24T03:45:49.750Z",
+        "SignatureVersion": "1",
+        "Signature": "UrU+DtmsJanWvmW6DCd3qW4eJkABEMPQnuVpnmSx2Ec3nChuk+yKFDO51K7K7sx63w7glBYUy47C3DuRq4cbTdsHrj0sBUi0yiTV3UNvdLVhACiYzmdVI7C7rtth1iH/j8VSWqjT98KtiYyNL484P9eRSq1vtqOa+UxPHqcOBehaBmpgflptplkINWrVoQ28Q4gjJg4sbT1OOYtrY2QAWuw6mvIxnqy7vkVS4kzudEWGI36xR7KsPczXgX5wdpp5cQbH9UfFj8726XuebfM5IRaMbMYnkga+Y3RpOS8lXduCw54dyKLYL3T+feW6vMg7FMy+2NNcG9N7B6u29arGNw==",
+        "SigningCertUrl": "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-eaea6120e66ea12e88dcd8bcbddca752.pem",
+        "UnsubscribeUrl": "https://sns.us-east-1.amazonaws.com/?Action=Unsubscribe&SubscriptionArn=arn:aws:sns:us-east-1:123456789012:SomeTopicName:0ed6d91c-b94c-476a-a3d5-0696ce6c0793",
+        "MessageAttributes": {
+          "Test": {
+            "Type": "String",
+            "Value": "TestString"
+          }
+        }
+      }
+    }
+  ]
+}
