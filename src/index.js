@@ -17,7 +17,14 @@ const defaultTransformErr = (err) => {
 
 const lambda_log_wrapper = (
   func,
-  { meta = {}, transformEvent, transformResult, transformErr, rethrowErr = true } = {}
+  {
+    meta = {},
+    transformEvent,
+    transformResult,
+    transformErr,
+    rethrowErr = true,
+    parseMetadata = true,
+  } = {}
 ) => {
   return async (event, context) => {
     let trace
@@ -26,7 +33,7 @@ const lambda_log_wrapper = (
     try {
       const timeout_duration = context.getRemainingTimeInMillis()
       const timeoutInSec = Math.ceil(timeout_duration / 1000)
-      const event_meta = parseEventMetadata(event)
+      const event_meta = parseMetadata ? parseEventMetadata(event) : null
       trace = { context, meta, event_meta, timeoutInSec }
       timeout_id = setTimeout(async () => {
         trace.likely_timeout = true
