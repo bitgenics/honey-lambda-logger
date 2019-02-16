@@ -1,3 +1,5 @@
+const ARN_PARSER = /arn:aws:(\w*):([^:]*):(\d*):/
+
 const filterNames = (obj, keys) => {
   const result = {}
   for (let key of keys) {
@@ -56,13 +58,22 @@ const parseEventMetadata = (event) => {
   let metadata = {}
   if (event.Records) {
     const record = event.Records[0]
-    const awsRegion = record.AwsRegion || record.awsRegion
+    let awsRegion = record.AwsRegion || record.awsRegion
     const eventSource = record.EventSource || record.eventSource
     const eventSourceARN = record.EventSourceARN || record.eventSourceARN
     const eventVersion = record.EventVersion || record.eventVersion
     const eventSubscriptionArn = record.EventSubscriptionArn || record.eventSubscriptionArn
+    let accountId
+
+    if (eventSourceARN || eventSubscriptionArn) {
+      const arn = eventSourceARN || eventSubscriptionArn
+      const match = arn.match(ARN_PARSER)
+      awsRegion = awsRegion || match[2]
+      accountId = match[3]
+    }
 
     metadata = {
+      accountId,
       awsRegion,
       eventSource,
       eventSourceARN,
