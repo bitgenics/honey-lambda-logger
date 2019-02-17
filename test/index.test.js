@@ -3,6 +3,10 @@ const honeycomb = require('../src/honeycomb')
 
 jest.mock('../src/honeycomb')
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 const newContext = () => {
   return {
     getRemainingTimeInMillis: () => 3000,
@@ -40,4 +44,23 @@ test('simple event', async () => {
     region: 'us-east-1',
   })
   expect(trace.timeoutInSec).toEqual(3)
+})
+
+test('Error should be included in trace', async () => {
+  const event = { testing: true }
+  const context = newContext()
+  const fn = hll(async () => {
+    const err = new Error('test')
+    err.customProp = 'foobar'
+    throw err
+  })
+  try {
+    await fn(event, context)
+  } catch (err) {
+    expect(honeycomb.sendEvent).toBeCalledTimes(1)
+    let trace = honeycomb.sendEvent.mock.calls[0][0]
+    trace = JSON.parse(JSON.stringify(trace))
+    expect(trace.err.message).toEqual('test')
+    expect(trace.err.customProp).toEqual('foobar')
+  }
 })
