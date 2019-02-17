@@ -52,6 +52,7 @@ const lambda_log_wrapper = (
       if (transformResult) {
         trace.result = transformResult(result)
       }
+      return result
     } catch (err) {
       console.log('ERR!')
       console.log(err)
