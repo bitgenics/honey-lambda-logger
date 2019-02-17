@@ -10,7 +10,6 @@ const sendEvent = async (trace, context, start_time) => {
   trace.durationInMs = (duration[0] * 1000 + duration[1] / 1e6).toFixed(1)
   trace.remainingMs = context.getRemainingTimeInMillis()
   await honeycomb.sendEvent(trace)
-  console.log('sent trace: ', trace)
 }
 
 const defaultTransformErr = (err) => {
@@ -55,8 +54,6 @@ const lambda_log_wrapper = (
       }
       return result
     } catch (err) {
-      console.log('ERR!')
-      console.log(err)
       trace.err = transformErr ? transformErr(err) : defaultTransformErr(err)
       if (rethrowErr) {
         throw err
