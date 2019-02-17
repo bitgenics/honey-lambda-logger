@@ -3,6 +3,7 @@ const parseEventMetadata = require('./parseEvent')
 const lambda_promisify = require('./lambda_promisify')
 
 const ARN_PARSER = /arn:aws:(\w*):([^:]*):(\d*):/
+let cold_start = true
 
 const sendEvent = async (trace, context, start_time) => {
   const duration = process.hrtime(start_time)
@@ -39,7 +40,7 @@ const lambda_log_wrapper = (
       const match = context.invokedFunctionArn.match(ARN_PARSER)
       context.region = match.length > 3 ? match[2] : null
       context.accountId = match.length > 4 ? match[3] : null
-      trace = { context, meta, event_meta, timeoutInSec }
+      trace = { context, meta, event_meta, timeoutInSec, cold_start }
       timeout_id = setTimeout(async () => {
         trace.likely_timeout = true
         await sendEvent(trace, context, start_time)
@@ -63,6 +64,7 @@ const lambda_log_wrapper = (
     } finally {
       clearTimeout(timeout_id)
       await sendEvent(trace, context, start_time)
+      cold_start = false
     }
   }
 }
