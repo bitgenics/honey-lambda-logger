@@ -30,8 +30,8 @@ test('simple event', async () => {
   expect(honeycomb.sendEvent).toBeCalledTimes(1)
   let trace = honeycomb.sendEvent.mock.calls[0][0]
   trace = JSON.parse(JSON.stringify(trace))
+
   expect(trace.context).toEqual({
-    accountId: null,
     awsRequestId: 'fe549ea7-670c-402f-a3c8-26e3815d813c',
     callbackWaitsForEmptyEventLoop: true,
     functionName: 'some-test-lambda',
@@ -41,9 +41,9 @@ test('simple event', async () => {
     logGroupName: '/aws/lambda/some-test-lambda',
     logStreamName: '2019/02/15/[$LATEST]fff41893f3da45fc9b6d45ec4fa07a92',
     memoryLimitInMB: 128,
-    region: 'us-east-1',
   })
-  expect(trace.timeoutInSec).toEqual(3)
+  expect(trace.region).toEqual('us-east-1')
+  expect(trace.accountId).toEqual('123456789012')
 })
 
 test('Error should be included in trace', async () => {
@@ -72,5 +72,15 @@ test('Return of the wrapped function must be returned', async () => {
     return event
   })
   const result = await fn(event, context)
+  expect(result).toEqual(event)
+})
+
+test('Should work without context', async () => {
+  const event = { testing: true }
+  const fn = hll(async () => {
+    return event
+  })
+  const result = await fn(event)
+  expect(honeycomb.sendEvent).toBeCalledTimes(1)
   expect(result).toEqual(event)
 })

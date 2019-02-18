@@ -7,7 +7,9 @@ let cold_start = true
 const sendEvent = async (trace, context, start_time) => {
   const duration = process.hrtime(start_time)
   trace.durationInMs = (duration[0] * 1000 + duration[1] / 1e6).toFixed(1)
-  trace.remainingMs = context.getRemainingTimeInMillis()
+  if (context && context.getRemainingTimeInMillis()) {
+    trace.remainingMs = context.getRemainingTimeInMillis()
+  }
   await honeycomb.sendEvent(trace)
 }
 
@@ -32,17 +34,20 @@ const lambda_log_wrapper = (
     let timeout_id
     const start_time = process.hrtime()
     try {
-      const timeout_duration = context.getRemainingTimeInMillis()
-      const timeoutInSec = Math.ceil(timeout_duration / 1000)
-      const event_meta = parseMetadata ? parseEventMetadata(event) : null
-      const match = context.invokedFunctionArn.match(ARN_PARSER)
-      context.region = match.length > 3 ? match[2] : null
-      context.accountId = match.length > 4 ? match[3] : null
-      trace = { context, meta, event_meta, timeoutInSec, cold_start }
-      timeout_id = setTimeout(async () => {
-        trace.likely_timeout = true
-        await sendEvent(trace, context, start_time)
-      }, timeout_duration - 250)
+      trace = { context, meta, cold_start }
+      if (context && context.getRemainingTimeInMillis()) {
+        const timeout_duration = context.getRemainingTimeInMillis()
+        trace.timeoutInSec = Math.ceil(timeout_duration / 1000)
+        timeout_id = setTimeout(async () => {
+          trace.likely_timeout = true
+          await sendEvent(trace, context, start_time)
+        }, timeout_duration - 250)
+        const match = context.invokedFunctionArn.match(ARN_PARSER)
+        trace.region = match && match.length >= 3 ? match[2] : null
+        trace.accountId = match && match.length >= 4 ? match[3] : null
+      }
+
+      trace.event_meta = parseMetadata ? parseEventMetadata(event) : null
 
       if (transformEvent) {
         trace.event = transformEvent(event)
