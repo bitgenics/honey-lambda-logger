@@ -1,6 +1,5 @@
 const honeycomb = require('./honeycomb')
 const parseEventMetadata = require('./parseEvent')
-const lambda_promisify = require('./lambda_promisify')
 
 const ARN_PARSER = /arn:aws:(\w*):([^:]*):(\d*):/
 let cold_start = true
@@ -48,7 +47,7 @@ const lambda_log_wrapper = (
       if (transformEvent) {
         trace.event = transformEvent(event)
       }
-      const result = await lambda_promisify(func, event, context)
+      const result = await func.apply(null, [event, context])
       if (transformResult) {
         trace.result = transformResult(result)
       }

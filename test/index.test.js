@@ -64,3 +64,13 @@ test('Error should be included in trace', async () => {
     expect(trace.err.customProp).toEqual('foobar')
   }
 })
+
+test('Return of the wrapped function must be returned', async () => {
+  const event = { testing: true }
+  const context = newContext()
+  const fn = hll(async () => {
+    return event
+  })
+  const result = await fn(event, context)
+  expect(result).toEqual(event)
+})
