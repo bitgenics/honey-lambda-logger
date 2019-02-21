@@ -42,8 +42,8 @@ test('simple event', async () => {
     logGroupName: '/aws/lambda/some-test-lambda',
     logStreamName: '2019/02/15/[$LATEST]fff41893f3da45fc9b6d45ec4fa07a92',
     logUrl:
-      'https://console.aws.amazon.com/cloudwatch/home?region=undefined#logEventViewer:group=/aws/lambda/some-test-lambda;stream=2019/02/15/[$LATEST]fff41893f3da45fc9b6d45ec4fa07a92;filter="fe549ea7-670c-402f-a3c8-26e3815d813c"',
-    memoryLimitInMB: 128,
+      'https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logEventViewer:group=/aws/lambda/some-test-lambda;stream=2019/02/15/[$LATEST]fff41893f3da45fc9b6d45ec4fa07a92;filter="fe549ea7-670c-402f-a3c8-26e3815d813c"',
+    memoryLimitInMB: 256,
     region: 'us-east-1',
   })
   expect(trace.costUnits).toEqual(2)

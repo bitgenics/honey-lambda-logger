@@ -49,7 +49,7 @@ const lambda_log_wrapper = (
         trace.context.region = match && match.length >= 3 ? match[2] : null
         trace.context.accountId = match && match.length >= 4 ? match[3] : null
         // prettier-ignore
-        trace.context.logUrl = `https://console.aws.amazon.com/cloudwatch/home?region=${trace.region}#logEventViewer:group=${context.logGroupName};stream=${encodeURL(context.logStreamName)};filter="${context.invokeid}"`
+        trace.context.logUrl = `https://console.aws.amazon.com/cloudwatch/home?region=${trace.context.region}#logEventViewer:group=${context.logGroupName};stream=${encodeURL(context.logStreamName)};filter="${context.invokeid}"`
       }
 
       trace.event_meta = parseMetadata ? parseEventMetadata(event) : null
