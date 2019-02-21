@@ -11,7 +11,7 @@ const sendEvent = async (trace, context, start_time) => {
   if (context && context.getRemainingTimeInMillis()) {
     trace.remainingMs = context.getRemainingTimeInMillis()
     trace.costUnits = Math.ceil(trace.durationInMs / 100) * (context.memoryLimitInMB / 128)
-    trace.costInMicroDollar = (trace.costUnits * 0.4).toFixed(1)
+    trace.costInMicroDollar = trace.costUnits * 0.2 + 0.2
   }
   await honeycomb.sendEvent(trace)
 }

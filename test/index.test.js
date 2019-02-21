@@ -18,7 +18,7 @@ const newContext = () => {
     invokeid: 'fe549ea7-670c-402f-a3c8-26e3815d813c',
     logGroupName: '/aws/lambda/some-test-lambda',
     logStreamName: '2019/02/15/[$LATEST]fff41893f3da45fc9b6d45ec4fa07a92',
-    memoryLimitInMB: 128,
+    memoryLimitInMB: 256,
   }
 }
 
@@ -46,8 +46,8 @@ test('simple event', async () => {
     memoryLimitInMB: 128,
     region: 'us-east-1',
   })
-  expect(trace.costUnits).toEqual(1)
-  expect(trace.costInMicroDollar).toEqual('0.4')
+  expect(trace.costUnits).toEqual(2)
+  expect(trace.costInMicroDollar).toBeCloseTo(0.6)
 })
 
 test('Error should be included in trace', async () => {
