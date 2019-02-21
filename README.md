@@ -68,6 +68,7 @@ For more information on most of these settings, see: https://docs.aws.amazon.com
 | costInMicroDollar | The cost in microDollars. The $ price of a million requests|
 | costUnits | 1 cost unit = lowest possible charge: 100ms of 128Mb Lambda |
 | durationInMs | How long the execution took in milliseconds |
+| err | The error object |
 | likely_timeout | 250ms before the lambda times out we log an event with likely_timeout set |
 | remainingMs | How many milliseconds are left |
 
