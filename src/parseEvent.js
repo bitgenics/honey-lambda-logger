@@ -60,14 +60,16 @@ const parseEventMetadata = (event) => {
     const record = event.Records[0]
     let awsRegion = record.AwsRegion || record.awsRegion
     const eventSource = record.EventSource || record.eventSource
-    const eventSourceARN = record.EventSourceARN || record.eventSourceARN
+    const eventSourceARN =
+      record.EventSourceARN ||
+      record.eventSourceARN ||
+      record.EventSubscriptionArn ||
+      record.eventSubscriptionArn
     const eventVersion = record.EventVersion || record.eventVersion
-    const eventSubscriptionArn = record.EventSubscriptionArn || record.eventSubscriptionArn
     let accountId
 
-    if (eventSourceARN || eventSubscriptionArn) {
-      const arn = eventSourceARN || eventSubscriptionArn
-      const match = arn.match(ARN_PARSER)
+    if (eventSourceARN) {
+      const match = eventSourceARN.match(ARN_PARSER)
       awsRegion = awsRegion || match[2]
       accountId = match[3]
     }
@@ -77,7 +79,6 @@ const parseEventMetadata = (event) => {
       awsRegion,
       eventSource,
       eventSourceARN,
-      eventSubscriptionArn,
       eventVersion,
       records_length: event.Records.length,
     }

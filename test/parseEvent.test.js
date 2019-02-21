@@ -34,8 +34,7 @@ test('parse a SNS Notification event', () => {
     accountId: '123456789012',
     awsRegion: 'us-east-1',
     eventSource: 'aws:sns',
-    eventSourceARN: undefined,
-    eventSubscriptionArn:
+    eventSourceARN:
       'arn:aws:sns:us-east-1:123456789012:SomeTopicName:0ed6d91c-b94c-476a-a3d5-0696ce6c0793',
     eventVersion: '1.0',
     records_length: 1,
