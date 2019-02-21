@@ -29,6 +29,13 @@ module.exports = hll(handler)
 
 NOTE! Currently `honey-lambda-logger` only works on async handlers and ignores the `node6` callbacks or even early `context.done` type callbacks.
 
+## Configuring
+
+Configuring `hll` is done through two environment variables
+
+* HONEYCOMB_WRITE_KEY: Your write key for Honeycomb.
+* HLL_DATASET: And surprise surprise, the Dataset to log to.
+
 ## Customizing 
 
 We do give you a lot of control of what exactly should go to Honeycomb. Here are the options you can pass to `hll(handler, options)`
