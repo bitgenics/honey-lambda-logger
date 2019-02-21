@@ -29,6 +29,13 @@ module.exports = hll(handler)
 
 NOTE! Currently `honey-lambda-logger` only works on async handlers and ignores the `node6` callbacks or even early `context.done` type callbacks.
 
+## Configuring
+
+Configuring `hll` is done through two environment variables
+
+* HONEYCOMB_WRITE_KEY: Your write key for Honeycomb.
+* HLL_DATASET: And surprise surprise, the Dataset to log to.
+
 ## Customizing 
 
 We do give you a lot of control of what exactly should go to Honeycomb. Here are the options you can pass to `hll(handler, options)`
@@ -68,6 +75,7 @@ For more information on most of these settings, see: https://docs.aws.amazon.com
 | costInMicroDollar | The cost in microDollars. The $ price of a million requests|
 | costUnits | 1 cost unit = lowest possible charge: 100ms of 128Mb Lambda |
 | durationInMs | How long the execution took in milliseconds |
+| err | The error object |
 | likely_timeout | 250ms before the lambda times out we log an event with likely_timeout set |
 | remainingMs | How many milliseconds are left |
 
