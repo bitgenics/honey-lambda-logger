@@ -7,9 +7,11 @@ let cold_start = true
 
 const sendEvent = async (trace, context, start_time) => {
   const duration = process.hrtime(start_time)
-  trace.durationInMs = (duration[0] * 1000 + duration[1] / 1e6).toFixed(1)
+  trace.durationInMs = Math.ceil(duration[0] * 1000 + duration[1] / 1e6)
   if (context && context.getRemainingTimeInMillis()) {
     trace.remainingMs = context.getRemainingTimeInMillis()
+    trace.costUnits = Math.ceil(trace.durationInMs / 100) * (context.memoryLimitInMB / 128)
+    trace.costInMicroDollar = (trace.costUnits * 0.4).toFixed(1)
   }
   await honeycomb.sendEvent(trace)
 }

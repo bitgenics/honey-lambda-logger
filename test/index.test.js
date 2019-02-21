@@ -32,6 +32,7 @@ test('simple event', async () => {
   trace = JSON.parse(JSON.stringify(trace))
 
   expect(trace.context).toEqual({
+    accountId: '123456789012',
     awsRequestId: 'fe549ea7-670c-402f-a3c8-26e3815d813c',
     callbackWaitsForEmptyEventLoop: true,
     functionName: 'some-test-lambda',
@@ -40,10 +41,13 @@ test('simple event', async () => {
     invokeid: 'fe549ea7-670c-402f-a3c8-26e3815d813c',
     logGroupName: '/aws/lambda/some-test-lambda',
     logStreamName: '2019/02/15/[$LATEST]fff41893f3da45fc9b6d45ec4fa07a92',
+    logUrl:
+      'https://console.aws.amazon.com/cloudwatch/home?region=undefined#logEventViewer:group=/aws/lambda/some-test-lambda;stream=2019/02/15/[$LATEST]fff41893f3da45fc9b6d45ec4fa07a92;filter="fe549ea7-670c-402f-a3c8-26e3815d813c"',
     memoryLimitInMB: 128,
+    region: 'us-east-1',
   })
-  expect(trace.region).toEqual('us-east-1')
-  expect(trace.accountId).toEqual('123456789012')
+  expect(trace.costUnits).toEqual(1)
+  expect(trace.costInMicroDollar).toEqual('0.4')
 })
 
 test('Error should be included in trace', async () => {
