@@ -60,6 +60,7 @@ test('Parse a API Gateway Proxy event', () => {
   const event = require('./api-gw-proxy.json')
   const metadata = parseEvent(event)
   const expected = {
+    eventSource: 'aws:apigateway',
     resource: '/{proxy+}',
     path: '/path/to/resource',
     httpMethod: 'POST',
