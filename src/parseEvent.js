@@ -92,10 +92,35 @@ const parseRecords = (records) => {
   return metadata
 }
 
+const parseApiGatewayProxy = (event) => {
+  // prettier-ignore
+  let {
+    resource, path, httpMethod, queryStringParameters, pathParameters, stageVariables, headers, requestContext,
+  } = event
+  //TODO: Replace with white-list instead
+  delete headers['X-Forwarded-For']
+  requestContext = {
+    accountId: requestContext.accountId,
+    resourceId: requestContext.resourceId,
+    stage: requestContext.stage,
+    requestId: requestContext.requestId,
+    requestTime: requestContext.requestTime,
+    requestTimeEpoch: requestContext.requestTimeEpoch,
+    apiId: requestContext.apiId,
+    protocol: requestContext.protocol,
+  }
+  // prettier-ignore
+  return {
+    resource, path, httpMethod, queryStringParameters, pathParameters, stageVariables, headers, requestContext,
+  }
+}
+
 const parseEventMetadata = (event) => {
   let metadata = {}
   if (event.Records && Array.isArray(event.Records) && event.Records.length > 0) {
     metadata = parseRecords(event.Records)
+  } else if (event.path && event.httpMethod && event.headers && event.requestContext) {
+    metadata = parseApiGatewayProxy(event)
   }
 
   return metadata

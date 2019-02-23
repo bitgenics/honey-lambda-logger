@@ -53,6 +53,43 @@ test('parse a SNS Notification event', () => {
 test('Do not fail on a random event with Records field', () => {
   parseEvent({ Records: {} })
   parseEvent({ Records: [] })
-  const metadata = parseEvent({ Records: [{ foo: 'bar' }] })
-  console.log({ metadata })
+  parseEvent({ Records: [{ foo: 'bar' }] })
+})
+
+test('Parse a API Gateway Proxy event', () => {
+  const event = require('./api-gw-proxy.json')
+  const metadata = parseEvent(event)
+  const expected = {
+    resource: '/{proxy+}',
+    path: '/path/to/resource',
+    httpMethod: 'POST',
+    queryStringParameters: {
+      foo: 'bar',
+    },
+    pathParameters: {
+      proxy: '/path/to/resource',
+    },
+    stageVariables: {
+      baz: 'qux',
+    },
+    headers: {
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+      'Accept-Encoding': 'gzip, deflate, sdch',
+      'Accept-Language': 'en-US,en;q=0.8',
+      'Cache-Control': 'max-age=0',
+      'X-Forwarded-Port': '443',
+      'X-Forwarded-Proto': 'https',
+    },
+    requestContext: {
+      accountId: '123456789012',
+      resourceId: '123456',
+      stage: 'prod',
+      requestId: 'c6af9ac6-7b61-11e6-9a41-93e8deadbeef',
+      requestTime: '09/Apr/2015:12:34:56 +0000',
+      requestTimeEpoch: 1428582896000,
+      apiId: '1234567890',
+      protocol: 'HTTP/1.1',
+    },
+  }
+  expect(metadata).toEqual(expected)
 })
