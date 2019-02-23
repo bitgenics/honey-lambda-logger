@@ -49,3 +49,10 @@ test('parse a SNS Notification event', () => {
   }
   expect(metadata).toEqual(expected)
 })
+
+test('Do not fail on a random event with Records field', () => {
+  parseEvent({ Records: {} })
+  parseEvent({ Records: [] })
+  const metadata = parseEvent({ Records: [{ foo: 'bar' }] })
+  console.log({ metadata })
+})

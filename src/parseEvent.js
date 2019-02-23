@@ -18,8 +18,8 @@ const flattenSNSMessageAttributes = (attributes) => {
   return result
 }
 
-const parseSNSMetadata = (event) => {
-  const record = event.Records[0]
+const parseSNSMetadata = (records) => {
+  const record = records[0]
   const sns = filterNames(record.Sns, ['Timestamp', 'MessageId', 'Type', 'TopicArn', 'Subject'])
   sns.MessageAttributes = flattenSNSMessageAttributes(record.Sns.MessageAttributes)
   return { sns }
@@ -42,10 +42,10 @@ const parseDynamoDBRecords = (records) => {
   })
 }
 
-const parseDynamoDBMetadata = (event) => {
-  const record = event.Records[0]
+const parseDynamoDBMetadata = (records) => {
+  const record = records[0]
   const dynamodb = { StreamViewType: record.dynamodb.StreamViewType }
-  dynamodb.records = parseDynamoDBRecords(event.Records)
+  dynamodb.records = parseDynamoDBRecords(records)
   return { dynamodb }
 }
 
@@ -54,40 +54,50 @@ const parsers = {
   'aws:dynamodb': parseDynamoDBMetadata,
 }
 
+const parseRecords = (records) => {
+  const record = records[0]
+  const eventSource = record.EventSource || record.eventSource
+  if (!eventSource) {
+    return {}
+  }
+
+  let awsRegion = record.AwsRegion || record.awsRegion
+  const eventSourceARN =
+    record.EventSourceARN ||
+    record.eventSourceARN ||
+    record.EventSubscriptionArn ||
+    record.eventSubscriptionArn
+  const eventVersion = record.EventVersion || record.eventVersion
+  let accountId
+
+  if (eventSourceARN) {
+    const match = eventSourceARN.match(ARN_PARSER)
+    awsRegion = awsRegion || match[2]
+    accountId = match[3]
+  }
+
+  const metadata = {
+    accountId,
+    awsRegion,
+    eventSource,
+    eventSourceARN,
+    eventVersion,
+    records_length: records.length,
+  }
+
+  const parser = eventSource && parsers[eventSource]
+  if (parser) {
+    Object.assign(metadata, parser(records))
+  }
+  return metadata
+}
+
 const parseEventMetadata = (event) => {
   let metadata = {}
-  if (event.Records) {
-    const record = event.Records[0]
-    let awsRegion = record.AwsRegion || record.awsRegion
-    const eventSource = record.EventSource || record.eventSource
-    const eventSourceARN =
-      record.EventSourceARN ||
-      record.eventSourceARN ||
-      record.EventSubscriptionArn ||
-      record.eventSubscriptionArn
-    const eventVersion = record.EventVersion || record.eventVersion
-    let accountId
-
-    if (eventSourceARN) {
-      const match = eventSourceARN.match(ARN_PARSER)
-      awsRegion = awsRegion || match[2]
-      accountId = match[3]
-    }
-
-    metadata = {
-      accountId,
-      awsRegion,
-      eventSource,
-      eventSourceARN,
-      eventVersion,
-      records_length: event.Records.length,
-    }
-
-    const parser = eventSource && parsers[eventSource]
-    if (parser) {
-      Object.assign(metadata, parser(event))
-    }
+  if (event.Records && Array.isArray(event.Records) && event.Records.length > 0) {
+    metadata = parseRecords(event.Records)
   }
+
   return metadata
 }
 
