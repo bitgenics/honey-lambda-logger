@@ -109,9 +109,10 @@ const parseApiGatewayProxy = (event) => {
     apiId: requestContext.apiId,
     protocol: requestContext.protocol,
   }
+  const eventSource = 'aws:apigateway'
   // prettier-ignore
   return {
-    resource, path, httpMethod, queryStringParameters, pathParameters, stageVariables, headers, requestContext,
+    eventSource, resource, path, httpMethod, queryStringParameters, pathParameters, stageVariables, headers, requestContext,
   }
 }
 
