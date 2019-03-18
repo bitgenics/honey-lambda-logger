@@ -35,6 +35,7 @@ const lambda_log_wrapper = (
   return async (event, context) => {
     let trace
     let timeout_id
+    global.hll_handle_log = {}
     const start_time = process.hrtime()
     try {
       trace = { context, meta, cold_start }
@@ -69,6 +70,7 @@ const lambda_log_wrapper = (
       }
     } finally {
       clearTimeout(timeout_id)
+      trace.handle = global.hll_handle_log
       await sendEvent(trace, context, start_time)
       cold_start = false
     }

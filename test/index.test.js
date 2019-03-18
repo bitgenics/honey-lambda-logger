@@ -88,3 +88,17 @@ test('Should work without context', async () => {
   expect(honeycomb.sendEvent).toBeCalledTimes(1)
   expect(result).toEqual(event)
 })
+
+test('global setting object should be included', async () => {
+  const event = { testing: true }
+  const fn = hll(async () => {
+    global.hll_handle_log = { this: 'works' }
+    return event
+  })
+  const result = await fn(event)
+  expect(honeycomb.sendEvent).toBeCalledTimes(1)
+  const trace = honeycomb.sendEvent.mock.calls[0][0]
+  expect(trace.handle.this).toEqual('works')
+
+  expect(result).toEqual(event)
+})
