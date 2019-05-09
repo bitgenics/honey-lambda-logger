@@ -110,6 +110,10 @@ const parseApiGatewayProxy = (event) => {
     protocol: requestContext.protocol,
   }
   const eventSource = 'aws:apigateway'
+  headers = Object.keys(headers).reduce((acc, key) => {
+    acc[key.toLowerCase()] = headers[key]
+    return acc
+  }, {})
   // prettier-ignore
   return {
     eventSource, resource, path, httpMethod, queryStringParameters, pathParameters, stageVariables, headers, requestContext,
