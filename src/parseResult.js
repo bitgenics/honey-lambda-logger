@@ -12,7 +12,7 @@ const parseResponse = (response) => {
 }
 
 const parseResult = (result) => {
-  if (result.statusCode && result.headers) {
+  if (result.statusCode) {
     return parseResponse(result)
   }
 }
