@@ -1,6 +1,7 @@
 const encodeURL = require('encodeurl')
 const honeycomb = require('./honeycomb')
 const parseEventMetadata = require('./parseEvent')
+const parseResult = require('./parseResult')
 
 const ARN_PARSER = /arn:aws:(\w*):([^:]*):(\d*):/
 let cold_start = true
@@ -61,6 +62,8 @@ const lambda_log_wrapper = (
       const result = await func.apply(null, [event, context])
       if (transformResult) {
         trace.result = transformResult(result)
+      } else {
+        trace.result = parseResult(result)
       }
       return result
     } catch (err) {
