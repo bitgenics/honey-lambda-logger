@@ -93,6 +93,9 @@ const parseRecords = (records) => {
 }
 
 const lowercaseHeaders = (headers) => {
+  if (!headers) {
+    return {}
+  }
   return Object.keys(headers).reduce((acc, key) => {
     acc[key.toLowerCase()] = headers[key]
     return acc
