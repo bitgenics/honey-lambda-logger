@@ -1,6 +1,6 @@
 {
   "name": "@bitgenics/honey-lambda-logger",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "A simple wrapper for NodeJS Lambda calls that logs every invocation in lambda with useful metadata",
   "main": "src/index.js",
   "repository": "git@github.com:bitgenics/honey-lambda-logger.git",
