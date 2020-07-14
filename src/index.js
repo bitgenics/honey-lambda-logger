@@ -29,6 +29,7 @@ const lambda_log_wrapper = (
     transformEvent,
     transformResult,
     transformErr = defaultTransformErr,
+    ignoreErr = false,
     rethrowErr = true,
     parseMetadata = true,
   } = {}
@@ -67,7 +68,9 @@ const lambda_log_wrapper = (
       }
       return result
     } catch (err) {
-      trace.err = transformErr(err)
+      if (!ignoreErr) {
+        trace.err = transformErr(err)
+      }
       if (rethrowErr) {
         throw err
       }

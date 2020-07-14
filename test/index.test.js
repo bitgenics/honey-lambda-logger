@@ -69,6 +69,27 @@ test('Error should be included in trace', async () => {
   }
 })
 
+test('Error should not be included in trace with ignoreErr', async () => {
+  const event = { testing: true }
+  const context = newContext()
+  const fn = hll(
+    async () => {
+      const err = new Error('test')
+      err.customProp = 'foobar'
+      throw err
+    },
+    { ignoreErr: true }
+  )
+  try {
+    await fn(event, context)
+  } catch (err) {
+    expect(honeycomb.sendEvent).toBeCalledTimes(1)
+    let trace = honeycomb.sendEvent.mock.calls[0][0]
+    trace = JSON.parse(JSON.stringify(trace))
+    expect(trace.err).toBeUndefined()
+  }
+})
+
 test('Return of the wrapped function must be returned', async () => {
   const event = { testing: true }
   const context = newContext()
