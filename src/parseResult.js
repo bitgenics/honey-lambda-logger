@@ -15,7 +15,7 @@ const parseResponse = (response) => {
 }
 
 const parseResult = (result) => {
-  if (result.statusCode) {
+  if (result && result.statusCode) {
     return parseResponse(result)
   }
 }
