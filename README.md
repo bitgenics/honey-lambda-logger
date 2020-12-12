@@ -18,7 +18,7 @@ Me: Aaarrrrggghhhhh..
 This library is designed to wrap all NodeJS invocations and automagically suck all metadata into honeycomb. 90% of your data needs can be met with a quick:
 
 ```javascript
-const hll = require('@bitgenics/honeycomb-lambda-logger')
+const hll = require('@bitgenics/honey-lambda-logger')
 
 const handler = async (event, context) => {
   .....//Your regular lambda
